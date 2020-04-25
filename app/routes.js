@@ -1,8 +1,6 @@
 
 const User = require('./exercise');
 const dateFormat = require('dateformat')
-const shortId = require('shortid');
-
 
 const CreateUser = async (req, res, next) => {
     const { username } = req.body;
@@ -57,7 +55,11 @@ const GetExercises = async (req, res, next) => {
     if (!userId) {
         res.status(400).json("unkown userid")
     }
-
+    
+    const user = await User.findOne({ _id: userId });
+    if (!user) {
+        res.status(400).json("unkown user");
+    }
     if (to && from) {
         result = await User.findOne({ _id: userId }, { date: { $gte: new Date(from), $lte: new Date(to) } });
     }
